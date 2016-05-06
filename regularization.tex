@@ -1,0 +1,7 @@
+\section{Motivation of regularization}
+It is well known that introducing too many features in a model will almost always lead to perfect score with the training and validation set, but miserable failure with the test set. In another word, a feature-rich model has a very small bias (toward a particular model), but a very high variance (when used for prediction). The high variance probably comes from the observation that the confidence region of the fitted parameters is big enough to overwhelm the average value.
+
+If there is no way or rationale to reduce the number of features, regularization is often applied to solve the problem of over-fitting. I have a feeling that this amounts to the introduction of extra data points to the modeling problem, and this chapter is a summary of my attempt to formulate this feeling.
+
+\section{Linear model}
+I will start with the simple case of a a linear model with a feature space $\vec x \equiv(x_1, \cdots, x_n)^T$ and the corresponding set of coefficient vector $\vec\theta\equiv(\theta_1, \cdots, \theta_n)^T$.
