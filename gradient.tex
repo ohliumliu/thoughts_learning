@@ -36,7 +36,7 @@ Comparing Eq.~\ref{eqn:gradient_descent} and Eq.~\ref{eqn:Newton_descent}, one f
 \begin{equation}
 \alpha = \frac{1}{J''(\theta)}.
 \end{equation}
-This makes sense because when the curvature is big, a smaller time step seems fit. This relation also reveals that $\alpha$ and $J''(\theta)$ has the same sign. That means, when $J'(\theta)>0$ and $J''(\theta)<0$, $d\theta<0$, meaning thatthe algorithm may converge to local maximum. In another word, the requirement that $\alpha > 0$ may not hold. This is a very serious issue.
+This makes sense because when the curvature is big, a smaller time step seems fit. This relation also reveals that $\alpha$ and $J''(\theta)$ has the same sign. That means, when $J'(\theta)>0$ and $J''(\theta)<0$, $d\theta<0$, meaning thatthe algorithm may converge to local maximum. In another word, the requirement that $\alpha > 0$ may not hold. This is a very serious issue. Of course, we could use $|J''(\theta)|$ as a band-aid.
 
 An alternative to relate with Newton's method is to realize that solving $f(\theta)=0$ actually minimizes $J(\theta)=f^2(\theta)$. According to Newton's formulae,
 \begin{eqnarray}
@@ -50,4 +50,8 @@ where $\alpha=\frac{1}{2[f'(\theta_i)]^2}$. It might seem that this correlation 
 \end{equation}
 This is not reasonable because it diverges when $J'(\theta)=0$. The fundamental flaw is that $f(\theta)=0$ is sufficient but not a necessary condition to minimize $J(\theta)$. 
 
-Yet anothe alternative is to solve $f'(\theta)=0$ using Newton's method to minimize $J(\theta)=f^2(\theta)$. Here and in the above, when $J=f^2$, it is non-negative, normally satisfied by the use of sum-of-square cost functions. It is almost impossible to have $f(\theta)=0$ which means there is zero error.
+Yet anothe alternative is to solve $f'(\theta)=0$ using Newton's method to minimize $J(\theta)=f^2(\theta)$. Here and in the above, when $J=f^2$, it is non-negative, normally satisfied by the use of sum-of-square cost functions. It is almost impossible to have $f(\theta)=0$ which means there is zero error. Applying Newton's idea again, the updating rule becomes (\emph check the math!)
+\begin{eqnarray}
+\theta_j &=& \theta_i - \frac{f'(\theta_i)}{f''(\theta_i)},\\
+	 &=& \theta_i - \frac{J'(\theta_i)}{J''(\theta_i)-\frac{[J'(\theta)]^2}{2J(\theta)}}
+\end{eqnarray}
