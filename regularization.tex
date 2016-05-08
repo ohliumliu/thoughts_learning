@@ -46,7 +46,7 @@ For example, we want to find $(\vec u^{(1)}, v^{(1)})$ that satisfies
 \left[v^{(1)} - \left(\theta_0 + \vec\theta\cdot\vec v^{(1)}\right)\right]^2 = \lambda\theta_1^2.
 \end{equation}
 An obvious choice that is independent $\theta_i$ is $\vec u^{(1)} = (\sqrt\lambda, 0, \cdots)$ and $v^{(1)} = \theta_0$.
-In general, we would like to have $\vec u^{(i)} = \{\sqrt\lambda\delta_{ij}\}_j$ and $v^{(i)} = \theta_0$\footnotemark\footnotetext{You must have realized that the choice of $v^{(i)} = \theta_0$ violates our original requirement that it should be independt of $\theta_i$. To simplify the discussion, let's assume $\theta_0$ is not to be optimized. Another way to put it is to shift $y$ by $\langle y\rangle$ before regression, then the model shouldn't involve the constant term.}.  
+In general, we would like to have $\vec u^{(i)} = \{\sqrt\lambda\delta_{ij}\}_j (j=1, \cdots, n)$ and $v^{(i)} = \theta_0$\footnotemark\footnotetext{You must have realized that the choice of $v^{(i)} = \theta_0$ violates our original requirement that it should be independt of $\theta_i$. To simplify the discussion, let's assume $\theta_0$ is not to be optimized. Another way to put it is to shift $y$ by $\langle y\rangle$ before regression and scale the features by the mean as well, then the model shouldn't involve the constant term.}. We need to have $n$ points. 
 
 With this choice of points, the regularization cost can be compared with adding some extra points to the training set. In the space spanned by 
 the features, these points share the same predicted value or $\theta_0$ and distributed on each of the independent axis. It also includes the origin. The adoption 
@@ -75,4 +75,53 @@ in iterations: starting from a large $\lambda$, as more training data are fed to
 
 
 \section{Polynomial model}
-Without increasing feature set, one can increase the complexity of the model, for example, by increasing the polynomial order. 
+Without increasing feature set, one can increase the complexity of the model, for example, by increasing the polynomial order. To simplify the discussion, let's assume that the features have been properly scaled so that it is reasonable to use the following hypothesis,
+\begin{equation}
+h(\vec\theta, x) = \sum_{i=1}^n\theta_ix^i,
+\end{equation}
+or, in matrix format,
+\begin{equation}
+h(\vec\theta; x) =\vec\theta\cdot\begin{pmatrix}
+x\\x^2\\\vdots\\x^n
+\end{pmatrix}.
+\end{equation}
+
+Following the same idea used in the linear case, in order to interprete the regularization term as the cost function associated with some extra points, we need to find one or more points $(x_i, y_i)$ independent of $\theta_i$ that satisfies the following:
+\begin{equation}
+\sum_{i=1}^{m}\left[h(\vec\theta,x_m)-y_m\right]^2 = \sum_{i=1}^n\theta_i^2.
+\label{eqn:polycost}
+\end{equation}
+Since these points should reflect our unbiased knowledge, it seems only reasonable to choose a vanishing $y_m$. In fact, we should choose
+\begin{equation}
+y_m = \sum_{i=1}^n\theta_i\langle x^n\rangle,
+\end{equation}
+which reduces to 0 only for some cases even though $\langle x\rangle=0$ due to feature scaling.
+
+For now, with $y_m=0$, Eq.~\ref{eqn:polycost} is reduced to the following matrix format,
+\begin{equation}
+||\vec\theta\cdot\mathbf X||^2 = ||\vec\theta||^2,\label{eqn:rotation}
+\end{equation} 
+where
+\begin{equation}
+\mathbf X = \begin{pmatrix}
+x_1\ x_2\ \cdots\ x_m\\
+x_1^2\ x_2^2\ \cdots\ x_m^2\\
+\vdots\ \vdots\ \ddots\ \vdots\\
+x_1^n\ x_2^n\ \cdots\ x_m^n
+\end{pmatrix}.
+\end{equation}
+
+
+It is not clear to me at this point how to find $x_i$ that is independent of $\theta_i$. In a simpler case where $m = n$, $\mathrm X$ needs to be a rotation matrix to satisfy Eq.~\ref{eqn:rotation}. This is because Eq.~\ref{eqn:rotation} only requires that the norm of the l.h.s and r.h.s is the same, and rotation keeps the norm (\footnote{It's been implicit that $\lambda=1$. If not, we have to associate a uniform weight of $\lambda$ with each of these extra points.}) If we recall the choice of extra point in the linear case, $\mathrm X=\sqrt{\lambda}I$, and its null space is the whole feature space. This is stronger than Eq.~\ref{eqn:rotation}. Of course, we could have chosen a more general rotation matrix at that time.
+
+However, it is probably impossible to choose $x_i$ such that $\mathrm X$ is a rotation matrix, simply because of the strong relation between different rows of $\mathrm X$. In an almost trival case of $n=2$, it we can choose $x_1=1$ and $x_2=-1$ to satisfy Eq.~\ref{eqn:rotation}. In particular, the cost function associated with these two points is 
+\begin{eqnarray}
+J& = & \left(\theta_1 + \theta_2 \right)^2 + \left(\theta_1-\theta_2\right)^2\\
+ & = & 2(\theta_1^2 + \theta_2^2).
+\end{eqnarray}
+
+If we attempt $m>n$, at least for each choice of $\vec\theta$, we should be able to find a set of $x_i$ that can satisfy Eq.~\ref{eqn:rotation}. But can we find such a set that is independent of $\vec\theta$?
+
+Playing with another trivial choice of $(1, 0)$ means that its cost is $(\theta_1 + \theta_2 + \cdots + \theta_n)^2$. We cannot use this term for regularization, because it doesn't acutally penalize big $\theta_i$. In another word, adding $(1, 0)$ as an extra point for regularization doesn't disfavor higher order term, because higher order polynomial can still go through $(1,0)$.
+
+\section{Support Vector Machine}
