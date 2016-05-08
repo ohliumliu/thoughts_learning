@@ -1,0 +1,53 @@
+\section{A "derivation" of the gradient descent algorithm}
+Given a cost function $J(\theta)$ and we want to minimize it by changing $\theta$. Of course, the straightforward evaluation of derivative may provide a closed-form solution, but it doesn't scale very well in most practical cases. An "engineering" approach, gradient descent, is often used. It is essentially an iterative method to search for local minimum step by step.
+
+Given an initial guess $\theta_0$, we would like to change it by $d\theta$ to make $J(\theta)$ smaller. In the most general term,
+\begin{equation}
+d\theta = \mathcal{F}(J(\theta_0), J'(\theta_0), \cdots).
+\end{equation} 
+If all the derivatives were known, it would be very likely that we know $J(\theta)$ by Talyor series, and the minimization problem would be solved. In reality, we have to settle with much less information.  
+
+It makes sense to assume that $d\theta=0$ if $J'(\theta_0) = 0$, because $\theta_0$ reaches extremum. It is thus a first order approximation to prescribe
+\begin{equation}
+d\theta = kJ'(\theta_0).\label{eqn:Taylor}
+\end{equation}
+We also would like $J(\theta_0+d\theta)\leq J(\theta_0)$, which translates to
+\begin{equation}
+d\theta J'(\theta_0)\leq 0.\label{eqn:decreasing}
+\end{equation}
+Eq.~\ref{eqn:Taylor} and Eq.~\ref{eqn:decreasing} together implies $k\leq 0$. In a more common format, the gradient descent iteration reads
+\begin{equation}
+\theta_j = \theta_i -\alpha J'(\theta_i),\label{eqn:gradient_descent}
+\end{equation}
+where $\alpha > 0$ is called learning rate. This is one of the places people try to use "learning" to describe the progression of a fitting procedure.
+
+The choice of $\alpha$ is up to the user and has many variant. A constant learning rate may or may not be good enough to converge. An interesting feature of Eq.~\ref{eqn:gradient_descent} is that, given a constant learning rate, the change in $\theta$ is large when $J(\theta)$ is steep, and small when $J(\theta)$ is small. This seems to imply a danger of overshooting in the first case, and slow convergence in the latter.
+
+\section{The superficial relation with Newton's method}
+Newton's method is often used to find the root of a function $f(\theta)$. In particular, the iteration process is
+\begin{equation}
+\theta_j = \theta_i - \frac{f(\theta_i)}{f'(\theta_i)}.\label{eqn:Newton}
+\end{equation}
+Realizing that minimizing $J(\theta)$ is equivalent to solving $J'(\theta) = 0$ (to some extent), Eq.~\ref{eqn:Newton} suggests the following iteration
+\begin{equation}
+\theta_j = \theta_i - \frac{J'(\theta_i)}{J''(\theta_i)}.\label{eqn:Newton_descent}
+\end{equation}
+Comparing Eq.~\ref{eqn:gradient_descent} and Eq.~\ref{eqn:Newton_descent}, one finds that Newton's method is equivalent to gradient descent with a learning rate determined by the curvature,
+\begin{equation}
+\alpha = \frac{1}{J''(\theta)}.
+\end{equation}
+This makes sense because when the curvature is big, a smaller time step seems fit. This relation also reveals that $\alpha$ and $J''(\theta)$ has the same sign. That means, when $J'(\theta)>0$ and $J''(\theta)<0$, $d\theta<0$, meaning thatthe algorithm may converge to local maximum. In another word, the requirement that $\alpha > 0$ may not hold. This is a very serious issue.
+
+An alternative to relate with Newton's method is to realize that solving $f(\theta)=0$ actually minimizes $J(\theta)=f^2(\theta)$. According to Newton's formulae,
+\begin{eqnarray}
+\theta_j&=&\theta_i-\frac{f(\theta_i)}{f'(\theta_i)},\\
+	&=&\theta_i-\frac{2f(\theta_i)f'(\theta_i)}{2[f'(\theta_i)]^2},\\
+	&=&\theta_i-\alpha J'(\theta_i),
+\end{eqnarray}
+where $\alpha=\frac{1}{2[f'(\theta_i)]^2}$. It might seem that this correlation makes more sense because $\alpha\leq 0$ and $\alpha$ is bigger when $f(\theta)$ or $J^{1/2}(\theta)$ is steeper. In fact, if we write everything in terms of $J(\theta)$, the iteration becomes
+\begin{equation}
+\theta_j=\theta_i-\frac{2J(\theta_i)}{J'(\theta_i)}.
+\end{equation}
+This is not reasonable because it diverges when $J'(\theta)=0$. The fundamental flaw is that $f(\theta)=0$ is sufficient but not a necessary condition to minimize $J(\theta)$. 
+
+Yet anothe alternative is to solve $f'(\theta)=0$ using Newton's method to minimize $J(\theta)=f^2(\theta)$. Here and in the above, when $J=f^2$, it is non-negative, normally satisfied by the use of sum-of-square cost functions. It is almost impossible to have $f(\theta)=0$ which means there is zero error.
