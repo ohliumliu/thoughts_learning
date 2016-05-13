@@ -1,1 +1,41 @@
 \section{Moments of inertia}
+% Need to be merged with Ubuntu version
+When looking at a cloud of data points, it's just very natural to think of them as mass points. A collection of mass points whose locations are fixed is nothing but a rigid body. This is no stranger to anyone who took college physics. For those with exposure to classical mechanics, it's also natural to pull out the definition of inertia tensor.
+\begin{equation}
+	\mathbf{I} = \begin{pmatrix}
+			I_{xx} I_{xy} I_{xz}\\
+			I_{yx} I_{yy} I_{yz}\\
+			I_{zx} I_{zy} I_{zz}\\
+		     \end{pmatrix},
+\end{equation}
+where $I_{xx}, I_{yy}$ and $I_{zz}$ are moments of inertia with respective to $x, y$ and $z$ axis respectively and off-diagonal terms are products of inertia. In particular,
+\begin{equation}
+I_{xx} = \int_V(y^2+z^2)\,dV,
+\end{equation}
+and
+\begin{equation}
+I_{xy} = I_{yx} = -\int_Vxy\,dV.
+\end{equation}
+
+Inertia tensor is then readily used to compute the principal axis which form the basis set of a new space in which the tensor is diagonal. These new axis are the "stable" axis of rotation of the rigid body. If the body rotates around one of its principal axis, its angular momentum is parallel to this axis due to the fact that the principal axis is one of the eigenvectors of the inertia tensor. If the body rotates around an arbitrary axis, its anguluar velocity $\vec\omega$ consists of contribute from those along all three principal axis, and its angular momentum, $\vec L=\mathbf I\cdot\vec\omega$, also has contribute from different direction with \emph{different} weight being the corresponding eigenvalue. The angular momentum, in general, would be at an angle with the axis of rotation. Without extra force, the body would gradually assume a rotation axis along the principal axis with the biggest or the smallest eigenvalue. In this sense, not all principal axis are created equal. 
+
+A whole textbook could be written about the rotational movement of a rigid top. Not only in mechanics, but also in fields like molecular spectroscopy. My first exposure to this idea was in physics class, and later encountered it again in the study of rotational spectroscopy. The idea of inertia moment was used in the context of quantum mechanics to describe the movement of molecules, which were treated as a collection of points. It's all very natural to think about the distribution of these points in terms of their principal axis and visualize them as tops of various shape, such as prolate or oblate.
+
+\section{Variance-covariance matrix}
+Without thinking about physics, data scientist cares about the variation of points. Of course, bigger variations are of more importance, and smaller variations could be neglected without much consequences. The variance-covariance matrix is defined to quantify the distribution of data with respect to different axis.
+\begin{equation}
+	\mathbf{C} = \begin{pmatrix}
+			C_{xx} C_{xy} C_{xz}\\
+			C_{yx} C_{yy} C_{yz}\\
+			C_{zx} C_{zy} C_{zz}\\
+		     \end{pmatrix},
+\end{equation}
+where $C_{xx}, C_{yy}$ and $C_{zz}$ are variances of feature $x, y$ and $z$ respectively and off-diagonal terms are covariances. In particular,
+\begin{equation}
+C_{xx} = \langle (x-\bar x)^2\rangle,	
+\end{equation}
+and
+\begin{equation}
+C_{xy} = \langle(x-\bar x)(y-\bar y)\rangle.
+\end{equation}
+Normally, the features are normalized so that the averages are zero.
