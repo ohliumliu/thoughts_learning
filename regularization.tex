@@ -4,7 +4,12 @@ but miserable failure with the test set. In another word, a feature-rich model h
 high variance (when used for prediction). The high variance probably comes from the observation that the confidence region of the fitted 
 parameters is big enough to overwhelm the average value.
 
-If there is no way or rationale to reduce the number of features, regularization is often applied to solve the problem of over-fitting. 
+Another scnenario is from the so-called wide data. It's conventional to arrang the data so that each row represents
+an observation and each column represents a feature. Wide data simply indicates that the number of features is bigger
+than the number of samples. This is often found in imaging analysis (each pixel is a feature), array data and etc.
+
+
+If there is no way or rationale to reduce the number of features, regularization (as well as lasso) is often applied to solve the problem of over-fitting. 
 I have a feeling that this amounts to the introduction of extra data points to the modeling problem, and this chapter is a summary of my 
 attempt to formulate this feeling.
 
