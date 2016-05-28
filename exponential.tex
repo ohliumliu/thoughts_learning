@@ -29,7 +29,7 @@ As an example, let's look at $\langle y\rangle$.
 		   &=&\int b(y)e^{\eta y -a(\eta)}y\,dy\\
      &=&\int b(y)\frac{\partial}{\partial\eta}\left[e^{\eta y}e^{-a(\eta)}\right]\,dy + \int b(y)e^{\eta y-a(\eta)}\frac{\partial a(\eta)}{\partial\eta}\,dy\\
 	&=&(\frac{\partial}{\partial\eta}+ \frac{\partial a(\eta)}{\partial\eta})\int \mathcal G(y, \eta)\, dy\\
-	&=&\frac{\partial a(\eta)}{\partial\eta}.
+	&=&\frac{\partial a(\eta)}{\partial\eta}.\label{eqn:average}
 \end{eqnarray}
 
 The exponential family is a generalization of Boltzman distriubtion because of the extra factor $b(y)$. This generalization doesn't affect the above property regarding partition function and expectation value.
@@ -39,7 +39,7 @@ Remember our motivation is to find out constraints on $\eta$ using only mathemat
 	h(x, \theta) = \frac{d}{d\eta}a(\eta). \label{eqn:exponential_hypo}
 \end{equation}
 
-To reiterate, Eq.~\ref{eqn:exponential_hypo} tells us, if the distribution of $y$ belongs to the exponentail family, our hypothesis must assume a form arising from the derivative of the log partition function. In another word, there could be various ways to get $\eta$ from $x$ and $\theta$, but the functional form of the hypothesis $h(x, \theta)$ is fixed if it's written in terms of $\eta$.
+To reiterate, Eq.~\ref{eqn:exponential_hypo} tells us, if the distribution of $y$ belongs to the exponential family, our hypothesis must assume a form arising from the derivative of the log partition function. In another word, there could be various ways to get $\eta$ from $x$ and $\theta$, but the functional form of the hypothesis $h(x, \theta)$ is fixed if it's written in terms of $\eta$. Remember that $\eta$ is the proxy for our hypothesis regarding $x$ and $\theta$.
 
 Eq.~\ref{eqn:exponential_hypo} only requires that the hypothesis agrees with the expected value of $y$. Being such a general requirement, what information can we extract from it?
 
@@ -47,13 +47,39 @@ Eq.~\ref{eqn:exponential_hypo} only requires that the hypothesis agrees with the
 Let's start with Gaussian and apply the idea of Eq.~\ref{eqn:exponential_hypo}. First, we try to rewrite a Gaussian distribution according to Eq.~\ref{eqn:exponential-family}.
 
 \begin{eqnarray}
-	\mathcal N(\mu, 1)&=&\frac{1}{\sqrt{2\pi}}\exp\{-(y-\mu)^2/2\}\\
-		   &=&\frac{1}{\sqrt{2\pi}}e^{y^2/2}e^{-\mu y}e^{\mu^2/2}
+	\mathcal N(\mu, 1)&=&\frac{1}{\sqrt{2\pi}}\exp\{-(y-\mu)^2/2\},\\
+		   &=&\frac{1}{\sqrt{2\pi}}e^{-y^2/2}e^{\mu y}e^{-\mu^2/2}.
 \end{eqnarray}
 
+Obviously, Gassusian distribution $\mathcal N(\mu, 1)$ is a member of the exponential family by setting
+\begin{eqnarray}
+	b(y)&=&\frac{1}{\sqrt{2\pi}}e^{-y^2/2},\\
+	\eta&=&\mu,\\
+	a(\eta)&=&\mu^2 = \eta^2
+\end{eqnarray}
+
+Using Eq.~\ref{eqn:exponential_hypo}, our hypothesis shoud assume
+\begin{eqnarray}
+	h(x, \theta) &=& \frac{d}{d\eta}(\eta^2/2)\\
+		     &=& \eta\\
+		     &=& \mu
+\end{eqnarray}
+To recap what has happened this section, we started with an assumption of the distribution of an observable $y\sim\mathcal N(\mu, 1)$, and then confirmed that it belongs to the exponential family by simply rearrange some terms. Then following Eq.~\ref{eqn:exponential_hypo}, we found that the hypothesis must assume $h(x, \theta)=\eta$ when written in terms of $\eta$. In particular for Gassian, $\eta$ is equivalent to the mean of the distribution, so what we learn from this exercises is that the hypothesis much agrees with the average of $y$. We are still free to choose whatever $h(x, \theta)$ that is theoretically possible. Apparently, not much was gained from this exercises. But it's not the case for other distributions (See Section.~\ref{sec:Bounoulli}.
+
+Before we move on to show the power of this analysis, let's consider a slightly more general case when we starts from $\mathcal N(\mu, \sigma^2)$ with $\sigma$ known. Of course, this can be reduced to the earlier case by scaling $y$ with $\sigma$. More formally, we would relax the requirement of exponential family such that the coupling term is $e^{\eta T(y)}$. Earlier, $T(y) = y$. Following the same procedure that led to Eq.~\ref{eqn:average}, we have
+\begin{equation}
+	\langle T(y)\rangle = \frac{\partial}{\partial}a(\eta).
+\end{equation}
+So our hypothesis must satisfy the functional form arising from this equation. In terms of $\mathcal N(\mu, \sigma)$, it turns out $T(y) = y/\sigma$, $\eta = \mu/\sigma$ and $a(\eta) = \eta^2/2$. Since our hypothesis $h(x, \theta)$ should be the same as $\langle y\rangle$, it follows $\langle T(y)\rangle = h(x, \theta)/\sigma = \eta$ and we recover the same thing as before.
+
+A further generalization is to assume $\mathcal N(\mu, \sigma)$ with both $\mu$ and $\sigma$ unknown. The definition of exponential family can be further extended to have as the coupling term $e^{\vec\eta\cdot\vec T(y)}$. Here, the observable $T(y)$ and the parameter $\eta$ become vectors. And Eq.~\ref{eqn:average} becomes
+\begin{equation}
+	\langle T(y)_i \rangle =-\frac{\partial}{\partial\eta_i}a(\vec\eta)
+\end{equation}
 
 
-\section{Bounoulli and logistic}
+\section{Bournoulli and logistic}\label{sec:Bounoulli}
+The Bournoulli
 
 \section{Multinomial}
 
