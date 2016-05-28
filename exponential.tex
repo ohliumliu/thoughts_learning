@@ -1,0 +1,59 @@
+I was a little shocked when reading the Andrew Ng's lecture notes on the exponential family. Although some of the
+terminologies obvious were generalized from statistical mechanics, it still seems a little magical to see the power of
+exponential family. To me, this is a new way of thinking about a problem. This note is my attempt to understand
+the rationale behine the definition and application of exponential family.
+
+\section{The problem}
+Suppose we attempt to study the relation between a feature $x$ and an observable $y$. In regression, one has to start with some kind of hypothesis $y=h(x; \theta)$. In reality, of course, $y$ is always a little different from the prediction of the hypothesis, or,
+\begin{equation}
+y_i = h(x_i;\theta) + \epsilon_i
+\end{equation}
+for a particular observation $(x_i, y_i)$. We would hope that $\epsilon_i\sim\mathrm{i.i.d}\ \mathcal{N}(0, \sigma^2)$.
+In fact, this is not always the case, and it is highly recommended to inspect the residual after performing a regression.
+
+Anyway, a more fundamental issue is the origin of the hypothesis. It could come from the underlying physical model. If we only utilize the nature of statistics, what can we say about the hypothesis? For example, sigmodal function is used to do classification analysis, but why is sigmodal favored by us among all the possible smooth approximation to the step function.
+
+In many cases, we do know, with certain confidence, the distribution of observable $y$. For example, due to central limit theoreom, it is probably safe to assume that a continous observable is Gaussian if it reflects the combined/summed effect of many underlying processes. Another example is classification; we do know the sample could be either positive or negative following Bernoulli distribution. Given this information, the objective of regression analysis is to find the relation between the parameters of the distribution and the underlying features $x$. So, what can we say about this relationship in light of the presumed distribution of $y$? 
+
+\section{Exponential family}
+In the most general sense, $y$ is a randome variable following some distribution $\mathcal G(y, \eta)$. Here, $\eta$ represents the yet unknown contribution of features. The so called exponential family is a group of distribution that can be written in a way \emph{such that $\eta$ and $y$ can be factored in the expontial}:
+\begin{eqnarray}
+	\mathcal G(y, \eta) &\propto& b(y)e^{\eta y},\\
+			 &=& b(y)e^{\eta y - a(\eta)}\label{eqn:exponential-family}
+\end{eqnarray}
+The second equation only adds a normalization term $e^{-a(\eta)}$ which is a function of $\eta$. $a(\eta)$ is called log partition function, because this idea originated from satistical physics. In particular, this is a generalization of Boltzman equation, if one relates $y$ to energy, and $\eta$ to $\beta\equiv 1/k_BT$. From a pratical point of view, the whole idea of partition function and Boltzman distribution is that moments of energy or $y$ can be calculated as the derivative of log partition function with respect to $\beta$ or $\eta$. In essense, $\beta$ or $\eta$ is the Lagrangian multiplier. In order to sastisfy this, the only coupling term in $\mathcal G(y, \eta)$ should be $e^{\eta y}$.
+
+As an example, let's look at $\langle y\rangle$.
+\begin{eqnarray}
+	\langle y\rangle &=&\int y\mathcal G(y, \eta)\, dy\\
+		   &=&\int b(y)e^{\eta y -a(\eta)}y\,dy\\
+     &=&\int b(y)\frac{\partial}{\partial\eta}\left[e^{\eta y}e^{-a(\eta)}\right]\,dy + \int b(y)e^{\eta y-a(\eta)}\frac{\partial a(\eta)}{\partial\eta}\,dy\\
+	&=&(\frac{\partial}{\partial\eta}+ \frac{\partial a(\eta)}{\partial\eta})\int \mathcal G(y, \eta)\, dy\\
+	&=&\frac{\partial a(\eta)}{\partial\eta}.
+\end{eqnarray}
+
+The exponential family is a generalization of Boltzman distriubtion because of the extra factor $b(y)$. This generalization doesn't affect the above property regarding partition function and expectation value.
+
+Remember our motivation is to find out constraints on $\eta$ using only mathematical facts. We already have one. The derivative of log partition function is the expectation of $y$. That means, whatever model we choose to predict the distribution of $y$, if the distribution of $y$ is a member of the exponential family, then $\langle y\rangle=da(\eta)/d\eta$. The hypothesis $h(x, \theta)$ of course predicts the expectation of $y$, and it thus follows
+\begin{equation}
+	h(x, \theta) = \frac{d}{d\eta}a(\eta). \label{eqn:exponential_hypo}
+\end{equation}
+
+To reiterate, Eq.~\ref{eqn:exponential_hypo} tells us, if the distribution of $y$ belongs to the exponentail family, our hypothesis must assume a form arising from the derivative of the log partition function. In another word, there could be various ways to get $\eta$ from $x$ and $\theta$, but the functional form of the hypothesis $h(x, \theta)$ is fixed if it's written in terms of $\eta$.
+
+Eq.~\ref{eqn:exponential_hypo} only requires that the hypothesis agrees with the expected value of $y$. Being such a general requirement, what information can we extract from it?
+
+\section{Gaussian}
+Let's start with Gaussian and apply the idea of Eq.~\ref{eqn:exponential_hypo}. First, we try to rewrite a Gaussian distribution according to Eq.~\ref{eqn:exponential-family}.
+
+\begin{eqnarray}
+	\mathcal N(\mu, 1)&=&\frac{1}{\sqrt{2\pi}}\exp\{-(y-\mu)^2/2\}\\
+		   &=&\frac{1}{\sqrt{2\pi}}e^{y^2/2}e^{-\mu y}e^{\mu^2/2}
+\end{eqnarray}
+
+
+
+\section{Bounoulli and logistic}
+
+\section{Multinomial}
+
