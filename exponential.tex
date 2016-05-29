@@ -16,7 +16,7 @@ Anyway, a more fundamental issue is the origin of the hypothesis. It could come 
 In many cases, we do know, with certain confidence, the distribution of observable $y$. For example, due to central limit theoreom, it is probably safe to assume that a continous observable is Gaussian if it reflects the combined/summed effect of many underlying processes. Another example is classification; we do know the sample could be either positive or negative following Bernoulli distribution. Given this information, the objective of regression analysis is to find the relation between the parameters of the distribution and the underlying features $x$. So, what can we say about this relationship in light of the presumed distribution of $y$? 
 
 \section{Exponential family}
-In the most general sense, $y$ is a randome variable following some distribution $\mathcal G(y, \eta)$. Here, $\eta$ represents the yet unknown contribution of features. The so called exponential family is a group of distribution that can be written in a way \emph{such that $\eta$ and $y$ can be factored in the expontial}:
+In the most general sense, $y$ is a randome variable following some distribution $\mathcal G(y, \eta)$. Here, $\eta$ represents the yet unknown contribution of features. The so called exponential family is a group of distribution that can be written in a way \emph{such that $\eta$ and $y$ can be factored in the exponential}:
 \begin{eqnarray}
 	\mathcal G(y, \eta) &\propto& b(y)e^{\eta y},\\
 			 &=& b(y)e^{\eta y - a(\eta)}\label{eqn:exponential-family}
@@ -74,12 +74,40 @@ So our hypothesis must satisfy the functional form arising from this equation. I
 
 A further generalization is to assume $\mathcal N(\mu, \sigma)$ with both $\mu$ and $\sigma$ unknown. The definition of exponential family can be further extended to have as the coupling term $e^{\vec\eta\cdot\vec T(y)}$. Here, the observable $T(y)$ and the parameter $\eta$ become vectors. And Eq.~\ref{eqn:average} becomes
 \begin{equation}
-	\langle T(y)_i \rangle =-\frac{\partial}{\partial\eta_i}a(\vec\eta)
+	\langle T(y)_i \rangle =-\frac{\partial}{\partial\eta_i}a(\vec\eta)\label{eqn:averageGeneral}
 \end{equation}
+As for Gassuian, $\vec\eta=(\mu/\sigma^2, -1/2\sigma^2)^T$ and $a(\vec\eta)=-\eta_1^2/4\eta_2+(1/2)\ln\left|1/2\eta_2\right|$. Following Eq.~\ref{eqn:averageGeneral}, the hypothesis should ensure that $\langle y\rangle = \mu$ and $\langle y^2\rangle = \sigma^2 + \mu^2$. Again, not very informativel. But it explains why we would want $y = h(x, \theta) + \mathcal N(\mu, \sigma)$.
 
 
-\section{Bournoulli and logistic}\label{sec:Bounoulli}
-The Bournoulli
+\section{Bernoulli and logistic}\label{sec:Bounoulli}
+The Bernoulli distribution is a natural choice to describe the probablity of a binary outcome $y$. Here, we believe that $y$ assumes either 1 or 0 with the following probability:
+\begin{equation}
+	\text{Prob}(y)=\begin{cases}
+				\phi, & y = 1\\
+				1-\phi, & y = 0
+			\end{cases}
+\end{equation}
+Apparently, we don't know $\phi$ and how to estimate it from our features, but as before, we wonder if something could be deduced realizing that Bernoulli distribution belongs to the exponential family.
+
+First of all, we rewrite the probability mass function in terms of Eq.~\ref{eqn:exponential-family}.
+\begin{eqnarray}
+	\text{Prob}(y) &=& \phi^y(1-\phi)^{1-y},\\
+		     &=& \exp\{y\ln\phi + (1-y)\ln(1-\phi)\}\\
+	      &=&e^{y\ln\left(\frac{\phi}{1-\phi}\right)}e^{\ln(1-\phi)}.
+\end{eqnarray}
+Indeed, Bernoulli distribution can be cast into a form conforming with the definition of exponential family with
+\begin{eqnarray}
+	b(y) &=& 1,\\
+	\eta &=& \ln\frac{\phi}{1-\phi},\\\label{eqn:logit}
+	a(\eta) &=& -\ln(1-\phi) = \ln\left(1+e^\eta\right).\label{eqn:BernoulliLogP}
+\end{eqnarray}
+Following the idea used in the previous section, the expectation of $y$ is given by Eq.~\ref{eqn:average}, or,
+\begin{equation}
+	\phi = \langle y\rangle = \frac{e^\eta}{1+e^\eta}.\label{eqn:sigmoid}
+\end{equation}
+Here we used the fact that the average of $y$ is $\phi$ since our starting point is $y\sim\text{Bernoulli}(\phi)$. This equation tells us that the parameter $\phi$ has to be calcuated from a sigmoidal function of $\eta$. There are different hypothesis of $\eta$, for example, $\eta = \vec\theta\cdot\vec x$, but Eq.~\ref{eqn:sigmoid} has to be used to get $\phi$ from $\eta$. This is in contrast with Gaussian. In that case, $\eta$ turns out to be $\mu$, and there is no functional constraints between the two.
+
+Eq.~\ref{eqn:sigmoid} is very powerful. Among all the smooth approximations of step function, this function is chosen by merely invoking some fundamental properties of statistical distribution and inference, namely, (i) the distribution of the observalbe belongs to the exponential family, and (ii) the hypothesis should agreen with the expectation of the observable. Suppose we choose another function to replace Eq.~\ref{eqn:sigmoid}, we wouldn't be able to justify it purely based on the the two properties we just used to reach Eq.~\ref{eqn:sigmoid}.
 
 \section{Multinomial}
 
