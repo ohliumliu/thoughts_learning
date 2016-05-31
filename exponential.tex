@@ -109,5 +109,6 @@ Here we used the fact that the average of $y$ is $\phi$ since our starting point
 
 Eq.~\ref{eqn:sigmoid} is very powerful. Among all the smooth approximations of step function, this function is chosen by merely invoking some fundamental properties of statistical distribution and inference, namely, (i) the distribution of the observalbe belongs to the exponential family, and (ii) the hypothesis should agreen with the expectation of the observable. Suppose we choose another function to replace Eq.~\ref{eqn:sigmoid}, we wouldn't be able to justify it purely based on the the two properties we just used to reach Eq.~\ref{eqn:sigmoid}.
 
+It may seem a little magic at the first sight, but it actually makes sens. Eq.~\ref{eqn:sigmoid} assumes a fractional form, namely $\phi = \mathcal P/1 + \mathcal P$ where $\mathcal P$ is some unknown function of the features. Being a Bernoulli process, the probability of an outcome should be determined by its associated probability as a fraction of the sum of all possible outcomes' probabilities. This is also the key idea behind Bayesian. From this point of view, Eq.~\ref{eqn:sigmoid} is not that strong a conclusion.
 \section{Multinomial}
 
