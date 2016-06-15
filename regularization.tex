@@ -13,6 +13,8 @@ If there is no way or rationale to reduce the number of features, regularization
 I have a feeling that this amounts to the introduction of extra data points to the modeling problem, and this chapter is a summary of my 
 attempt to formulate this feeling.
 
+Before my anaylsis, it should be noted that, so far I have seen two types of retionale for regularization from textbooks. The first is from the observation that large fitting parameters with opposite signs may provide good fitting results if the corresponding features pairs happen to correlate, as is common the case in multi-variate models. Of course, one would like to limit the unwanted growth of slopes, thus the introduction of a penalty term proportional to sum of square of the parameters. The second is based on the practical concern that the design matrix (the matrix formed by the column vectors of observations) may be close to singular, making it unsable to invert, as needed for the estimation of slopes. Numerically, one would add some non-zero diagonal term to the design matrix to make sure it is not signular, and this is equivalent to adding a penalty term in the cost function that is proportional to sum of square of the parameters. 
+
 \section{Linear model}
 I will start with the simple case of a a linear model with a feature space $\vec x \equiv(x_1, \cdots, x_n)^T$ and the corresponding set of coefficient 
 vector $\vec\theta\equiv(\theta_1, \cdots, \theta_n)^T$. The prediction of the model is simply linear with a constant offset $\theta_0$:

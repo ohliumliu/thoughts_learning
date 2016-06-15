@@ -1,0 +1,99 @@
+I was a little shocked when reading the Andrew Ng's lecture notes on the exponential family. Although some of the
+terminologies obvious were generalized from statistical mechanics, it still seems a little magical to see the power of
+exponential family. To me, this is a new way of thinking about a problem. This note is my attempt to understand
+the rationale behine the definition and application of exponential family.
+
+\section{The problem}
+Suppose we attempt to study the relation between a feature $x$ and an observable $y$. In regression, one has to start with some kind of hypothesis $y=h(x; \theta)$. In reality, of course, $y$ is always a little different from the prediction of the hypothesis, or,
+\begin{equation}
+y_i = h(x_i;\theta) + \epsilon_i
+\end{equation}
+for a particular observation $(x_i, y_i)$. We would hope that $\epsilon_i\sim\mathrm{i.i.d}\ \mathcal{N}(0, \sigma^2)$.
+In fact, this is not always the case, and it is highly recommended to inspect the residual after performing a regression.
+
+Anyway, a more fundamental issue is the origin of the hypothesis. It could come from the underlying physical model. If we only utilize the nature of statistics, what can we say about the hypothesis? For example, sigmodal function is used to do classification analysis, but why is sigmodal favored by us among all the possible smooth approximation to the step function.
+
+In many cases, we do know, with certain confidence, the distribution of observable $y$. For example, due to central limit theoreom, it is probably safe to assume that a continous observable is Gaussian if it reflects the combined/summed effect of many underlying processes. Another example is classification; we do know the sample could be either positive or negative following Bernoulli distribution. Given this information, the objective of regression analysis is to find the relation between the parameters of the distribution and the underlying features $x$. So, what can we say about this relationship in light of the presumed distribution of $y$? 
+
+\section{Exponential family}
+In the most general sense, $y$ is a randome variable following some distribution $\mathcal G(y, \eta)$. Here, $\eta$ represents the yet unknown contribution of features. The so called exponential family is a group of distribution that can be written in a way \emph{such that $\eta$ and $y$ can be factored in the exponential}:
+\begin{eqnarray}
+	\mathcal G(y, \eta) &\propto& b(y)e^{\eta y},\\
+			 &=& b(y)e^{\eta y - a(\eta)}\label{eqn:exponential-family}
+\end{eqnarray}
+The second equation only adds a normalization term $e^{-a(\eta)}$ which is a function of $\eta$. $a(\eta)$ is called log partition function, because this idea originated from satistical physics. In particular, this is a generalization of Boltzman equation, if one relates $y$ to energy, and $\eta$ to $\beta\equiv 1/k_BT$. From a pratical point of view, the whole idea of partition function and Boltzman distribution is that moments of energy or $y$ can be calculated as the derivative of log partition function with respect to $\beta$ or $\eta$. In essense, $\beta$ or $\eta$ is the Lagrangian multiplier. In order to sastisfy this, the only coupling term in $\mathcal G(y, \eta)$ should be $e^{\eta y}$.
+
+As an example, let's look at $\langle y\rangle$.
+\begin{eqnarray}
+	\langle y\rangle &=&\int y\mathcal G(y, \eta)\, dy\\
+		   &=&\int b(y)e^{\eta y -a(\eta)}y\,dy\\
+     &=&\int b(y)\frac{\partial}{\partial\eta}\left[e^{\eta y}e^{-a(\eta)}\right]\,dy + \int b(y)e^{\eta y-a(\eta)}\frac{\partial a(\eta)}{\partial\eta}\,dy\\
+	&=&(\frac{\partial}{\partial\eta}+ \frac{\partial a(\eta)}{\partial\eta})\int \mathcal G(y, \eta)\, dy\\
+	&=&\frac{\partial a(\eta)}{\partial\eta}.\label{eqn:average}
+\end{eqnarray}
+
+The exponential family is a generalization of Boltzman distriubtion because of the extra factor $b(y)$. This generalization doesn't affect the above property regarding partition function and expectation value.
+
+Remember our motivation is to find out constraints on $\eta$ using only mathematical facts. We already have one. The derivative of log partition function is the expectation of $y$. That means, whatever model we choose to predict the distribution of $y$, if the distribution of $y$ is a member of the exponential family, then $\langle y\rangle=da(\eta)/d\eta$. The hypothesis $h(x, \theta)$ of course predicts the expectation of $y$, and it thus follows
+\begin{equation}
+	h(x, \theta) = \frac{d}{d\eta}a(\eta). \label{eqn:exponential_hypo}
+\end{equation}
+
+To reiterate, Eq.~\ref{eqn:exponential_hypo} tells us, if the distribution of $y$ belongs to the exponential family, our hypothesis must assume a form arising from the derivative of the log partition function. In another word, there could be various ways to get $\eta$ from $x$ and $\theta$, but the functional form of the hypothesis $h(x, \theta)$ is fixed if it's written in terms of $\eta$. Remember that $\eta$ is the proxy for our hypothesis regarding $x$ and $\theta$.
+
+Eq.~\ref{eqn:exponential_hypo} only requires that the hypothesis agrees with the expected value of $y$. Being such a general requirement, what information can we extract from it?
+
+\section{Gaussian}
+Let's start with Gaussian and apply the idea of Eq.~\ref{eqn:exponential_hypo}. First, we try to rewrite a Gaussian distribution according to Eq.~\ref{eqn:exponential-family}.
+
+\begin{eqnarray}
+	\mathcal N(\mu, 1)&=&\frac{1}{\sqrt{2\pi}}\exp\{-(y-\mu)^2/2\},\\
+		   &=&\frac{1}{\sqrt{2\pi}}e^{-y^2/2}e^{\mu y}e^{-\mu^2/2}.
+\end{eqnarray}
+
+Obviously, Gassusian distribution $\mathcal N(\mu, 1)$ is a member of the exponential family by setting
+\begin{eqnarray}
+	b(y)&=&\frac{1}{\sqrt{2\pi}}e^{-y^2/2},\\
+	\eta&=&\mu,\\
+	a(\eta)&=&\mu^2 = \eta^2
+\end{eqnarray}
+
+Using Eq.~\ref{eqn:exponential_hypo}, our hypothesis shoud assume
+\begin{eqnarray}
+	h(x, \theta) &=& \frac{d}{d\eta}(\eta^2/2)\\
+		     &=& \eta\\
+		     &=& \mu
+\end{eqnarray}
+To recap what has happened this section, we started with an assumption of the distribution of an observable $y\sim\mathcal N(\mu, 1)$, and then confirmed that it belongs to the exponential family by simply rearrange some terms. Then following Eq.~\ref{eqn:exponential_hypo}, we found that the hypothesis must assume $h(x, \theta)=\eta$ when written in terms of $\eta$. In particular for Gassian, $\eta$ is equivalent to the mean of the distribution, so what we learn from this exercises is that the hypothesis much agrees with the average of $y$. We are still free to choose whatever $h(x, \theta)$ that is theoretically possible. Apparently, not much was gained from this exercises. But it's not the case for other distributions (See Section.~\ref{sec:Bounoulli}.
+
+Before we move on to show the power of this analysis, let's consider a slightly more general case when we starts from $\mathcal N(\mu, \sigma^2)$ with $\sigma$ known. Of course, this can be reduced to the earlier case by scaling $y$ with $\sigma$. More formally, we would relax the requirement of exponential family such that the coupling term is $e^{\eta T(y)}$. Earlier, $T(y) = y$. Following the same procedure that led to Eq.~\ref{eqn:average}, we have
+\begin{equation}
+	\langle T(y)\rangle = \frac{\partial}{\partial}a(\eta).
+\end{equation}
+So our hypothesis must satisfy the functional form arising from this equation. In terms of $\mathcal N(\mu, \sigma)$, it turns out $T(y) = y/\sigma$, $\eta = \mu/\sigma$ and $a(\eta) = \eta^2/2$. Since our hypothesis $h(x, \theta)$ should be the same as $\langle y\rangle$, it follows $\langle T(y)\rangle = h(x, \theta)/\sigma = \eta$ and we recover the same thing as before.
+
+A further generalization is to assume $\mathcal N(\mu, \sigma)$ with both $\mu$ and $\sigma$ unknown. The definition of exponential family can be further extended to have as the coupling term $e^{\vec\eta\cdot\vec T(y)}$. Here, the observable $T(y)$ and the parameter $\eta$ become vectors. And Eq.~\ref{eqn:average} becomes
+\begin{equation}
+	\langle T(y)_i \rangle =-\frac{\partial}{\partial\eta_i}a(\vec\eta)\label{eqn:averageGeneral}
+\end{equation}
+As for Gassuian, $\vec\eta=(\mu/\sigma^2, -1/2\sigma^2)^T$ and $a(\vec\eta)=-\eta_1^2/4\eta_2+(1/2)\ln\left|1/2\eta_2\right|$. Following Eq.~\ref{eqn:averageGeneral}, the hypothesis should ensure that $\langle y\rangle = \mu$ and $\langle y^2\rangle = \sigma^2 + \mu^2$. Again, not very informativel. But it explains why we would want $y = h(x, \theta) + \mathcal N(\mu, \sigma)$.
+
+
+\section{Bernoulli and logistic}\label{sec:Bounoulli}
+The Bernoulli distribution is a natural choice to describe the probablity of a binary outcome $y$. Here, we believe that $y$ assumes either 1 or 0 with the following probability:
+\begin{equation}
+	\text{Prob}(y)=\begin{cases}
+				\phi, & y = 1\\
+				1-\phi, & y = 0
+			\end{cases}
+\end{equation}
+Apparently, we don't know $\phi$ and how to estimate it from our features, but as before, we wonder if something could be deduced realizing that Bernoulli distribution belongs to the exponential family.
+
+First of all, we rewrite the probability mass function in terms of Eq.~\ref{eqn:exponential-family}.
+\begin{eqnarray}
+	\text{Prob}(y) &=& \phi^y(1-\phi)^{1-y},\\
+		     &=& \exp\{y\ln\phi + (1-y)\ln(1-\phi)}\\
+	      &=&e^{y\ln\left(\frac{\phi}{1-\phi}\right)}e^{\ln(1-\phi)}
+\end{eqnarray}
+\section{Multinomial}
+
