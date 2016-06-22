@@ -36,7 +36,17 @@ Comparing Eq.~\ref{eqn:gradient_descent} and Eq.~\ref{eqn:Newton_descent}, one f
 \begin{equation}
 \alpha = \frac{1}{J''(\theta)}.
 \end{equation}
-This makes sense because when the curvature is big, a smaller time step seems fit. This relation also reveals that $\alpha$ and $J''(\theta)$ has the same sign. That means, when $J'(\theta)>0$ and $J''(\theta)<0$, $d\theta<0$, meaning thatthe algorithm may converge to local maximum. In another word, the requirement that $\alpha > 0$ may not hold. This is a very serious issue. Of course, we could use $|J''(\theta)|$ as a band-aid.
+This makes sense because when the curvature is big, a smaller time step seems fit. This relation also reveals that $\alpha$ and $J''(\theta)$ has the same sign. That means, when $J'(\theta)>0$ and $J''(\theta)<0$, $d\theta<0$, meaning that the algorithm may converge to local maximum. In another word, the requirement that $\alpha > 0$ may not hold. This is a very serious issue. Of course, we could use $|J''(\theta)|$ as a band-aid. 
+
+Another way to come up with Eq.~\ref{eqn:Newton_descent} is to approximate $J(\theta)$ around $\theta_i$ to the second order,
+\begin{equation}
+J(\theta) = J(\theta_i) + J'(\theta_i)(\theta-\theta_i) + \frac{1}{2}J''(\theta_i)(\theta-\theta_i)^2,
+\end{equation}
+and it follows that
+\begin{equation}
+\theta_j = \theta_i - \frac{J'(\theta_i)}{J''(\theta_i)}
+\end{equation}
+is the best estimate of $\theta$ given local information at $\theta_i$. In high dimension, a Hessian matrix is used instead of $J''$.
 
 An alternative to relate with Newton's method is to realize that solving $f(\theta)=0$ actually minimizes $J(\theta)=f^2(\theta)$. According to Newton's formulae,
 \begin{eqnarray}

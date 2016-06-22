@@ -1,0 +1,45 @@
+\section{Motivation}
+This is coolection of notes I am gathering regarding linear regression. The following is my focus:
+\begin{itemize}
+\item Useful math tools.
+\item Useful interpretations, especially geometrical ones.
+\item Useful practical considerations.
+\end{itemize}
+A lot of the results are from "Elements of Statistical Learninig".
+
+\section{Problem definition}
+We have $n$ experiments characterized by $\mathbf{x_{i}}$ with respective to $p$ features. For each measurement, there is single
+output $y_i$. The task is to find the best linear model characterized by its parameters $\beta_i$ where $i=1,\cdots,p$.
+
+From the perspective of maximum likelyhood, we assume that the observed value is the prediction by the model plus a random noise,
+\begin{equation}
+y_i = \beta_0 + x_{ij}\beta_j + \epsilon_i,
+\end{equation} 
+where the last terms is the noise term and Einstein notation is assumed. Here, $x_{ij}$ is the value for feature $j$ in the i-th measurement. One can write down
+the joint probability of observing a particular set of $y_i$ given a set of $\mathbf{x}_i$. Note that the only source of randomness is from $\epsilon$. Under the 
+following conditions (sufficient by may not be necessary):
+\begin{itemize}
+\item Each measurement is independent
+\item $\epsilon_i\sim\mathrm{i.i.d}\mathcal N(0, \sigma^2)$
+\end{itemize}
+the joint probability is maximized by minimizing the following residual sum of square,
+\begin{equation}
+RSS = \sum_{i=1}^{n} y_i -( \beta_0 + x_{ij}\beta_j).\label{eqn:RSS}
+\end{equation}
+
+There are ways to simplify Eq.~\ref{eqn:RSS}. A common practice is to arrange $\mathbf{x_{i}}$ in a $(n+1)\times p$ matrix $X$ whose columns are $\mathbf{x_i}$'s and
+the first column being 1's. In this notation, the prediction is simply $X\beta$ and
+\begin{eqnarray}
+RSS &=& ||Y-X\beta||^2,\\
+    &=& (Y-X\beta)^T(Y-X\beta),\\
+    &=& (Y-X\cdot\beta)\cdot(Y-X\cdot\beta).
+\end{eqnarray}
+Here, $Y$ is a column vector formed by $y_i$ $(i = 1,\cdots,n)$ and $\beta$ is a column vector formed by $\beta_i$ $(i=1, \cdots, p)$. The second to last line is in terms of
+matrix and the last one is in terms of vector/tensor inner product.
+
+\section{Estimator and interpretations}
+\subsection{A quick derivation using Einstein notation}
+\subsection{Geometric interpretation in sample space}
+\subsection{Gauss-Schmidt}
+
+
