@@ -17,29 +17,51 @@ y_i = \beta_0 + x_{ij}\beta_j + \epsilon_i,
 \end{equation} 
 where the last terms is the noise term and Einstein notation is assumed. Here, $x_{ij}$ is the value for feature $j$ in the i-th measurement. One can write down
 the joint probability of observing a particular set of $y_i$ given a set of $\mathbf{x}_i$. Note that the only source of randomness is from $\epsilon$. Under the 
-following conditions (sufficient by may not be necessary):
+following conditions (sufficient but may not be necessary):
 \begin{itemize}
 \item Each measurement is independent
 \item $\epsilon_i\sim\mathrm{i.i.d}\mathcal N(0, \sigma^2)$
 \end{itemize}
 the joint probability is maximized by minimizing the following residual sum of square,
 \begin{equation}
-RSS = \sum_{i=1}^{n} y_i -( \beta_0 + x_{ij}\beta_j).\label{eqn:RSS}
+RSS = \sum_{i=1}^{n} \left[y_i -( \beta_0 + x_{ij}\beta_j)\right]^2.\label{eqn:RSS}
 \end{equation}
 
-There are ways to simplify Eq.~\ref{eqn:RSS}. A common practice is to arrange $\mathbf{x_{i}}$ in a $(n+1)\times p$ matrix $X$ whose columns are $\mathbf{x_i}$'s and
+There are ways to simplify Eq.~\ref{eqn:RSS}. A common practice is to arrange $\mathbf{x_{i}}$ in a $n\times (p+1)$ matrix $X$ whose columns are $\mathbf{x_i}$'s and
 the first column being 1's. In this notation, the prediction is simply $X\beta$ and
 \begin{eqnarray}
-RSS &=& ||Y-X\beta||^2,\\
-    &=& (Y-X\beta)^T(Y-X\beta),\\
+RSS &=& ||Y-X\cdot\beta||^2,\\
+    &=& (Y-X\cdot\beta)^T(Y-X\cdot\beta),\\
     &=& (Y-X\cdot\beta)\cdot(Y-X\cdot\beta).
 \end{eqnarray}
-Here, $Y$ is a column vector formed by $y_i$ $(i = 1,\cdots,n)$ and $\beta$ is a column vector formed by $\beta_i$ $(i=1, \cdots, p)$. The second to last line is in terms of
+Here, $Y$ is a column vector formed by $y_i$ $(i = 1,\cdots,n)$ and $\beta$ is a column vector formed by $\beta_i$ $(i=0, \cdots, p)$. The second to last line is in terms of
 matrix and the last one is in terms of vector/tensor inner product.
 
 \section{Estimator and interpretations}
-\subsection{A quick derivation using Einstein notation}
 \subsection{Geometric interpretation in sample space}
+Eq.~\ref{eqn:RSS} can be understood in terms of the linear superposition of $p+1$ vectors in $\mathbb{R}^{n}$. Recall that the design matrix $X$ is $n\times(p+1)$, and there are $p+1$ column vectors each with $n$ components. $X\cdot\beta$ is nothing but a compact way to generate a linear superposition of these $p+1$ vectors with coefficients $\beta_i$. Our purpose is to find the coefficients so that the linear superposition is closest to our target vector $Y$.
+
+When $p+1 = n$, $\beta$ can be solved by solving a linear equation $Y=X\beta$. When $p+1 > n$, there could be multiple solutions, leading to overfitting. When $p+1 < n$, there is no guarantee that we can have a solution to $Y=X\beta$. This is the case in most practical cases of linear regression, where we have fewer parameters than the number of points.
+
+Focusing on the last case, what would be the best choice of $beta$ to recover the target vector $Y$ from a linear combination of $\mathbf{x}_i$'s. Apparently, it boils down to the definition of closeness in $\mathbb{R}^n$, and the adoption of Eq.~\ref{eqn:RSS} implies the use of $L_2$ norm (Euclidean distance).
+\subsection{A quick derivation using Einstein notation}
+I will briefly write down a derivation of the estimator of $\beta$. I am not going to reference results written in matrix operation. Instead, I will use Einstein notation before converting the final results to matrix notation. This is the approach I learned from fluid mechanics class. In fact, the neat equations in terms of matrix operation is proved by using Einstein notation anyway.
+
+Eq.~\ref{eqn:RSS} is rewritten as a function of $\beta$.
+\begin{equation}
+RSS(\beta) = \sum_{i=1}^{n}\left[ y_i - x_{ij}\beta_j\right]^2,
+\end{equation}
+where $j$ runs from $0$ to $p$. For a particular $k$, the stationary condition is
+\begin{eqnarray}
+\frac{\partial}{\partial\beta_j}RSS(\beta) &=& 0, \\
+\sum_{i=1}^{n}\left(y_i-x_{ij}\beta_j\right)x_{ik} & = & 0,\\
+x_{ik}x_{ij}\beta_j &=& x_{ik}y_i, \\
+{X^TX\beta}_k &=& {X^Ty}_k.\label{eqn:estimator_component}
+\end{eqnarray} 
+The last line was reached by noting that $X_{ij}=x_{ij}$ by our construction. Since Eq.~\ref{eqn:estimator_component} applies to $k$ different components, it is equivalent to
+\begin{equation}
+X^TX\beta = X^Ty.
+\end{equation}
 \subsection{Gauss-Schmidt}
 
 
