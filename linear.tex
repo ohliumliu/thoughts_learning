@@ -53,15 +53,63 @@ RSS(\beta) = \sum_{i=1}^{n}\left[ y_i - x_{ij}\beta_j\right]^2,
 \end{equation}
 where $j$ runs from $0$ to $p$. For a particular $k$, the stationary condition is
 \begin{eqnarray}
-\frac{\partial}{\partial\beta_j}RSS(\beta) &=& 0, \\
+\frac{\partial}{\partial\beta_k}RSS(\beta) &=& 0, \\
 \sum_{i=1}^{n}\left(y_i-x_{ij}\beta_j\right)x_{ik} & = & 0,\\
 x_{ik}x_{ij}\beta_j &=& x_{ik}y_i, \\
-{X^TX\beta}_k &=& {X^Ty}_k.\label{eqn:estimator_component}
+(X^TX\beta)_k &=& (X^Ty)_k.\label{eqn:estimator_component}
 \end{eqnarray} 
 The last line was reached by noting that $X_{ij}=x_{ij}$ by our construction. Since Eq.~\ref{eqn:estimator_component} applies to $k$ different components, it is equivalent to
 \begin{equation}
-X^TX\beta = X^Ty.
+X^TX\beta = X^Ty,
 \end{equation}
+which has an obvious solution
+\begin{equation}
+	\beta = (X^TX)^{-1}X^Ty.\label{eqn:estimator}
+\end{equation}
+It is useful to check that the dimension of the right hand side of Eq.~\ref{eqn:estimator} is $(p+1)\times1$ as expected.
+
+Eq.~\ref{eqn:estimator} also provides the starting point to estimate the covariance matrix of $\beta_i$. Note that $\beta$ is a linear transformation of $Y$, so $COV(\beta)_{ij}$ can be related to $COV(Y)$ by the following,
+\begin{eqnarray}
+	COV(\beta)_{ij} &=& E[(\beta_i-\bar\beta_i)(\beta_j-\bar\beta_j)],\\
+		       &=&E[(H(Y-\bar Y))_i(H(Y-\bar Y))_j],\\
+		       &=&E[H_{il}(Y-\bar Y)_{l}H_{jm}(Y-\bar Y)_{m}],\\
+		       &=&H_{il}H_{jm}COV(Y)_{lm},\\
+			&=&H_{il}COV(Y)_{lm}H^T_{mj}.
+\end{eqnarray}
+Since this applies to each elements of $COV(\beta)$, we have in general
+\begin{equation}
+	COV(\beta) = H\ COV(Y)\ H^T.
+\end{equation}
+In particular, $H=(X^TX)X^T$ based on Eq.~\ref{eqn:estimator}. If $COV(Y)=\sigma^2I$, the covariance matrix of $\beta$ is simply
+\begin{equation}
+	COV(\beta) = (X^TX)^{-1}\sigma^2.
+\end{equation}
+
+The derivation above can be easily extended to the case of regularization. For this purpose, we need to limit ourselves to the discussion of the slopes $\beta_i$ ($i=1,\cdots,p$) as in Chapter~\ref{ch:linear}. Just to reiterate the rationale, the intercept shouldn't be subjected to regularization because that is a constant shift in the model; a constant shift to all the data points leads to a change in $\beta_0$ only and shouldn't introduce more or less penalty due to regularization. The target function we are trying to minimize becomes,
+\begin{equation}
+	\mathcal F(\beta)=RSS(\beta)+\lambda\beta_i\beta_i.\label{eqn:costReg}
+\end{equation}
+The stationary condition for $\beta_k$ becomes
+\begin{eqnarray}
+	\frac{\partial}{\partial\beta_k}\mathcal F(\beta) &=& 0, \\
+	\sum_{i=1}^{n}2\left(y_i-x_{ij}\beta_j\right)(-x_{ik}) + 2\lambda\beta_k & = & 0,\\
+	(x_{ik}x_{ij}+\delta_{kj}\lambda)\beta_j &=& x_{ik}y_i, \\
+	((X^TX+\lambda I)\beta)_k &=& (X^Ty)_k.
+\end{eqnarray} 
+The last line is again written in matrix notation
+\begin{equation}
+	(X^TX+\lambda I)\beta = X^TY,
+\end{equation}
+which solves to
+\begin{equation}
+	\beta = (X^TX+\lambda I)^{-1}X^TY.\label{eqn:estimatorReg}
+\end{equation}
+Eq.~\ref{eqn:estimatorReg} is related to the original motivation of regularization. In order to guarantee that $X^TX$ is not singular, one could add a term $\lambda I$ to make it nonsingular. This may also make the matrix inversion more stable numerically. Of course, regularization has alternative, and perhaps more fundamental motivations, which are summarized below:
+\begin{itemize}
+	\item Make $X^TX$ non-signular as discussed just now.
+	\item Extra data points as discussed in Chapter~\ref{ch:linear}. This idea can be used in the derivation above to Eq.~\ref{eqn:estimatorReg} as well.
+	\item As suggested in Chapter~\ref{ch:linear} and more formally in Eq.~\ref{eqn:costReg}, regularization can be thought of as the reminant of a prior probability. In fact, Eq.~\ref{eqn:costReg} is the log-likelyhood of having $\beta$ given the observation $Y$ and a prior of $\beta_i\sim\mathcal N(0,\lambda^{-1})$ (after ignoring the denominator).
+\end{itemize}
 \subsection{Gauss-Schmidt}
 
 
