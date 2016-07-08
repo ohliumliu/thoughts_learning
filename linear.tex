@@ -13,7 +13,7 @@ output $y_i$. The task is to find the best linear model characterized by its par
 
 From the perspective of maximum likelyhood, we assume that the observed value is the prediction by the model plus a random noise,
 \begin{equation}
-y_i = \beta_0 + x_{ij}\beta_j + \epsilon_i,
+y_i = \beta_0 + x_{ij}\beta_j + \epsilon_i,\label{eqn:linear_startingpoint}
 \end{equation} 
 where the last terms is the noise term and Einstein notation is assumed. Here, $x_{ij}$ is the value for feature $j$ in the i-th measurement. One can write down
 the joint probability of observing a particular set of $y_i$ given a set of $\mathbf{x}_i$. Note that the only source of randomness is from $\epsilon$. Under the 
@@ -83,7 +83,7 @@ Since this applies to each elements of $COV(\beta)$, we have in general
 In particular, $H=(X^TX)X^T$ based on Eq.~\ref{eqn:estimator}. If $COV(Y)=\sigma^2I$, the covariance matrix of $\beta$ is simply
 \begin{equation}
 	COV(\beta) = (X^TX)^{-1}\sigma^2.
-\end{equation}
+\end{equation} In particular, the variance of $\beta_j$ is $v_j\sigma^2$ where $v_j$ is the j-th diagonal element of $(X^TX)^{-1}$, which assumes a nicer form after Gram-Schmidt process to diagonalize $X^TX$.
 
 The derivation above can be easily extended to the case of regularization. For this purpose, we need to limit ourselves to the discussion of the slopes $\beta_i$ ($i=1,\cdots,p$) as in Chapter~\ref{ch:linear}. Just to reiterate the rationale, the intercept shouldn't be subjected to regularization because that is a constant shift in the model; a constant shift to all the data points leads to a change in $\beta_0$ only and shouldn't introduce more or less penalty due to regularization. The target function we are trying to minimize becomes,
 \begin{equation}
@@ -120,7 +120,9 @@ This was obtained earlier.
 
 As an aside, one more word on the column space of $X$. $X$ can be thought of as a row vector whose components are the column vectors $\mathbf{x}_i$ ($i=0,\cdots,p$). $X\beta$ can thus be thought of as the inner product of the ``row vector'' $X$ with a column vector $\beta$. The result is a linear combination of the elements of $X$. The result should have the same dimension as the elements of $X$, or a column vector $n\times1$. This line of thought comes in handy when dealing with higher dimensions, especially common in tensor algebra.
 
-Now going back to the geometric interpretation. Because we are actually solving $\beta$ in the compromised condition Eq.~\ref{eqn:compromise}, the prediction $\hat{Y}\equiv X\beta$ for the training points must be in the subspace spanned by the column vectors $\mathbf{x}_i$ ($i=0,\cdots, p$). In particular, Eq.~\ref{eqn:compromise} implies that $Y-\hat{Y}$ is the norm of the column space, so it is perpendicular to any linear combination of the basis of this column space, including $\hat{Y}$.
+Now going back to the geometric interpretation. Because we are actually solving $\beta$ in the compromised condition Eq.~\ref{eqn:compromise}, the prediction $\hat{Y}\equiv X\beta$ for the training points must be in the subspace spanned by the column vectors $\mathbf{x}_i$ ($i=0,\cdots, p$). In particular, Eq.~\ref{eqn:compromise} implies that $Y-\hat{Y}$ is the norm of the column space, so it is perpendicular to any linear combination of the basis of this column space, including $\hat{Y}$. In another word, $\hat{Y}$ lies in the column space.
+
+Another conclusion concerns the degree of freedom of this fitting problem. From our starting point Eq.~\ref{eqn:linear_startingpoint}, it would seem that if we have $n$ observation, we are dealing with $n$ degrees of freedom. But the adoption of such a linear model further implies that $Y-\hat{Y}$ is normal to the column space, which adds $p+1$ constraints (Eq.~\ref{eqn:compromise}). As a result, the true degree of freedom is $n-p-1$. Here, the issue of overfitting naturally arises when the true degree of freedom becomes zero.
 
 With this interpretation in mind, it is thus easy to understand what would happen when some features are correlated. Mathematically, it means some of the column vectors are parallel. In the extreme case, it would make the matrix $X^TX$ singular and non-invertible. Geometrically, it would make it more difficult to uniquely determine the norm to the column space.
 \subsection{Gram-Schmidt}
